@@ -6,9 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -129,7 +127,21 @@ public class CarControllerTest {
 
         mvc.perform(delete(new URI("/cars/1")))
                 .andExpect(status().isNoContent());
-        verify(carService, times(1)).delete(1l);
+        verify(carService, times(1)).delete(1L);
+    }
+
+    @Test
+    public void updateCar() throws Exception {
+        Car newCar = getCar();
+        newCar.setCondition(Condition.NEW);
+        newCar.getDetails().setMileage(400000);
+        newCar.setLocation(new Location(20.0,-20.0));
+        mvc.perform(put("/cars/1", newCar)
+                .content(json.write(newCar).getJson())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 
     /**
