@@ -105,7 +105,7 @@ class CarController {
 
         car.setId(id);
         Car newCar = carService.save(car);
-        EntityModel<Car> resource = assembler.toModel(car);
+        EntityModel<Car> resource = assembler.toModel(newCar);
         return ResponseEntity.ok(resource);
     }
 
